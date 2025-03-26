@@ -40,4 +40,19 @@ class FarmController extends Controller
 
         return response()->json(['message' => 'Farm deleted successfully']);
     }
+
+
+    public function update(Request $request, Farm $farm)
+    {
+        $this->authorize('update', $farm);
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'coordinates' => 'nullable',
+        ]);
+
+        $farm->update($validated);
+
+        return response()->json($farm);
+    }
 }

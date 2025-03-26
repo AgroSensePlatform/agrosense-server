@@ -79,3 +79,30 @@ it('cannot show a farm created by another user', function () {
 
     $response->assertStatus(403); // Forbidden
 });
+
+
+it('can update a farm created by the user', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $farm = Farm::factory()->create([
+        'user_id' => $user->id,
+        'name' => 'Old Farm Name',
+    ]);
+
+    $response = $this->putJson("/api/farms/{$farm->id}", [
+        'name' => 'Updated Farm Name',
+        'coordinates' => '{"type":"Polygon","coordinates":[[[30,10],[40,40],[20,40],[10,20],[30,10]]]}', // Example geometry
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJson([
+            'id' => $farm->id,
+            'name' => 'Updated Farm Name',
+        ]);
+
+    $this->assertDatabaseHas('farms', [
+        'id' => $farm->id,
+        'name' => 'Updated Farm Name',
+    ]);
+});
