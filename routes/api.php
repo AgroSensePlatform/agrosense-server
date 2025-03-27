@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\SensorController;
+use App\Http\Controllers\MeasurementController;
 
 
 
@@ -48,3 +49,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/sensors/scan', [SensorController::class, 'scan']); // Decide to create or update a sensor
 });
 
+Route::post('/measurements', [MeasurementController::class, 'store']);
