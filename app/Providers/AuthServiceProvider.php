@@ -6,6 +6,8 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Policies\FarmPolicy;
 use App\Models\Farm;
+use App\Policies\SensorPolicy;
+use App\Models\Sensor;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Farm::class => FarmPolicy::class,
+        Sensor::class => SensorPolicy::class,
     ];
 
     /**
