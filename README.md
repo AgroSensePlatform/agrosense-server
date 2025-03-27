@@ -1,66 +1,191 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+Here’s a README.md file for the server you built:
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+---
 
-## About Laravel
+# AgroSense Backend
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+AgroSense is a backend application designed to support farmers in smart water management using IoT technologies and mobile devices. This server is built with Laravel and provides RESTful APIs for user management, farm management, sensor registration, and real-time measurement tracking.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+### User Management
+- User registration and login using email and password.
+- Token-based authentication using Laravel Sanctum.
+- Logout functionality.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Farm Management
+- Create, update, view, and delete farms.
+- Store farm boundaries using GPS coordinates.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Sensor Management
+- Register sensors by scanning QR codes.
+- Automatically associate sensors with farms.
+- Update sensor details when scanned again.
+- View and delete sensors.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Measurement Management
+- Post real-time measurements (e.g., humidity) from sensors.
+- Store measurements in the database for analysis.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Installation
 
-### Premium Partners
+### Prerequisites
+- PHP >= 8.1
+- Composer
+- MySQL
+- Laravel 10.x
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Steps
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd agrosense-backend
+   ```
 
-## Contributing
+2. Install dependencies:
+   ```bash
+   composer install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Copy the .env file and configure your environment variables:
+   ```bash
+   cp .env.example .env
+   ```
 
-## Code of Conduct
+4. Generate the application key:
+   ```bash
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. Run the migrations to set up the database:
+   ```bash
+   php artisan migrate
+   ```
 
-## Security Vulnerabilities
+6. Start the development server:
+   ```bash
+   php artisan serve
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
+
+## API Endpoints
+
+### Authentication
+- `POST /register` - Register a new user.
+- `POST /login` - Log in and receive an authentication token.
+- `POST /logout` - Log out the authenticated user.
+- `GET /user` - Get the authenticated user's details.
+
+### Farms
+- `GET /farms` - List all farms for the authenticated user.
+- `POST /farms` - Create a new farm.
+- `GET /farms/{farm}` - View a specific farm.
+- `PUT /farms/{farm}` - Update a specific farm.
+- `DELETE /farms/{farm}` - Delete a specific farm.
+
+### Sensors
+- `GET /sensors` - List all sensors for the authenticated user.
+- `POST /sensors` - Add a new sensor.
+- `POST /sensors/scan` - Create or update a sensor by scanning its QR code.
+- `GET /sensors/{sensor}` - View a specific sensor.
+- `PUT /sensors/{sensor}` - Update a specific sensor.
+- `DELETE /sensors/{sensor}` - Delete a specific sensor.
+
+### Measurements
+- `POST /measurements` - Post a measurement from a sensor.
+
+---
+
+## Running Tests
+
+To run the test suite, use the following command:
+
+```bash
+php artisan test
+```
+
+The test suite includes:
+- Unit tests for models and relationships.
+- Feature tests for API endpoints.
+
+---
+
+## Project Structure
+
+- **Models**:
+  - `User`: Handles user data and authentication.
+  - `Farm`: Represents farms and their boundaries.
+  - `Sensor`: Represents IoT sensors associated with farms.
+  - `Measurement`: Stores real-time data from sensors.
+
+- **Controllers**:
+  - `AuthController`: Manages user authentication.
+  - `FarmController`: Handles CRUD operations for farms.
+  - `SensorController`: Manages sensor registration and updates.
+  - `MeasurementController`: Handles posting of sensor measurements.
+
+- **Policies**:
+  - Authorization policies ensure users can only interact with their own farms and sensors.
+
+---
+
+## Database Schema
+
+### Users
+| Column           | Type       | Description              |
+|-------------------|------------|--------------------------|
+| id               | BIGINT     | Primary key              |
+| name             | STRING     | User's name              |
+| email            | STRING     | User's email (unique)    |
+| password         | STRING     | User's hashed password   |
+| email_verified_at| TIMESTAMP  | Email verification time  |
+| remember_token   | STRING     | Token for "remember me"  |
+| timestamps       | TIMESTAMP  | Created/updated times    |
+
+### Farms
+| Column      | Type       | Description                     |
+|-------------|------------|---------------------------------|
+| id          | BIGINT     | Primary key                     |
+| user_id     | BIGINT     | Foreign key to `users` table    |
+| name        | STRING     | Farm name                       |
+| coordinates | JSON       | GPS coordinates of the farm     |
+| timestamps  | TIMESTAMP  | Created/updated times           |
+
+### Sensors
+| Column      | Type       | Description                     |
+|-------------|------------|---------------------------------|
+| id          | BIGINT     | Primary key                     |
+| user_id     | BIGINT     | Foreign key to `users` table    |
+| farm_id     | BIGINT     | Foreign key to `farms` table    |
+| code        | STRING     | Unique sensor code              |
+| lat         | DECIMAL    | Latitude of the sensor          |
+| lon         | DECIMAL    | Longitude of the sensor         |
+| timestamps  | TIMESTAMP  | Created/updated times           |
+
+### Measurements
+| Column      | Type       | Description                     |
+|-------------|------------|---------------------------------|
+| id          | BIGINT     | Primary key                     |
+| sensor_id   | BIGINT     | Foreign key to `sensors` table  |
+| humidity    | DECIMAL    | Humidity value (0-100%)         |
+| timestamp   | TIMESTAMP  | Time of the measurement         |
+| timestamps  | TIMESTAMP  | Created/updated times           |
+
+---
+
+## Future Enhancements
+- Add real-time notifications for low humidity levels.
+- Implement historical data visualization with charts.
+- Add support for offline data synchronization.
+
+---
 
 ## License
+This project is open-source and available under the MIT License.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
