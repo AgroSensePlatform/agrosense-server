@@ -43,7 +43,7 @@ AgroSense is a backend application designed to support farmers in smart water ma
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd agrosense-backend
+   cd agrosense-server
    ```
 
 2. Install dependencies:
