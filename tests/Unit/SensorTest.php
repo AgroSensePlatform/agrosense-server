@@ -2,6 +2,7 @@
 use App\Models\Sensor;
 use App\Models\User;
 use App\Models\Farm;
+use App\Models\Measurement;
 
 it('has the correct fillable attributes', function () {
     $sensor = new Sensor();
@@ -22,4 +23,15 @@ it('belongs to a farm', function () {
 
     expect($sensor->farm)->toBeInstanceOf(Farm::class)
         ->and($sensor->farm->id)->toBe($farm->id);
+});
+
+
+it('has many measurements', function () {
+    $sensor = Sensor::factory()->create();
+
+    $measurement1 = Measurement::factory()->create(['sensor_id' => $sensor->id]);
+    $measurement2 = Measurement::factory()->create(['sensor_id' => $sensor->id]);
+
+    expect($sensor->measurements)->toHaveCount(2)
+        ->and($sensor->measurements->pluck('id'))->toContain($measurement1->id, $measurement2->id);
 });
