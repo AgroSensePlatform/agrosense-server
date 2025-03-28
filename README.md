@@ -1,7 +1,3 @@
-Here’s a README.md file for the server you built:
-
----
-
 # AgroSense Backend
 
 AgroSense is a backend application designed to support farmers in smart water management using IoT technologies and mobile devices. This server is built with Laravel and provides RESTful APIs for user management, farm management, sensor registration, and real-time measurement tracking.
