@@ -76,8 +76,8 @@ AgroSense is a backend application designed to support farmers in smart water ma
 - `POST /login` - Log in and receive an authentication token.
 - `POST /logout` - Log out the authenticated user.
 - `GET /user` - Get the authenticated user's details.
--  'PUT /user' - Update the authenticated user's profile (e.g., name, email, password).
-- 'DELETE /user' - Delete the authenticated user's account.
+- `PUT /user` - Update the authenticated user's profile (e.g., name, email, password).
+- `DELETE /user` - Delete the authenticated user's account.
 
 ### Farms
 - `GET /farms` - List all farms for the authenticated user.
