@@ -61,4 +61,35 @@ class AuthController extends Controller
     {
         return response()->json($request->user());
     }
+
+    public function update(Request $request)
+{
+    $user = $request->user();
+
+    $validated = $request->validate([
+        'name' => 'sometimes|string',
+        'email' => 'sometimes|string|email|unique:users,email,' . $user->id,
+        'password' => 'sometimes|string|min:4',
+    ]);
+
+    if (isset($validated['password'])) {
+        $validated['password'] = Hash::make($validated['password']);
+    }
+
+    $user->update($validated);
+
+    return response()->json([
+        'message' => 'User updated successfully',
+        'user' => $user,
+    ]);
+}
+
+    public function delete(Request $request)
+    {
+        $user = $request->user();
+        $user->tokens()->delete();
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully']);
+    }
 }

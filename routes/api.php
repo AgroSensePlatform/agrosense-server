@@ -22,6 +22,12 @@ use App\Http\Controllers\MeasurementController;
 
 Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::put('/user', [AuthController::class, 'update']); // Update the authenticated user
+    Route::delete('/user', [AuthController::class, 'delete']); // Delete the authenticated user
+});
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
