@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
+
+
 use Illuminate\Http\Request;
 use App\Models\Farm;
 
@@ -15,9 +18,26 @@ class FarmController extends Controller
 
     public function store(Request $request)
     {
+
+        Log::info('Farm creation request:', [
+            'user_id' => $request->user()->id,
+            'data' => $request->all(),
+        ]);
+
         $validated = $request->validate([
             'name' => 'required|string',
-            'coordinates' => 'nullable',
+            'coordinates' => 'nullable|array',
+        ]);
+
+        // Convert coordinates to JSON if provided
+        if (isset($validated['coordinates'])) {
+            $validated['coordinates'] = json_encode($validated['coordinates']);
+        }
+
+            // Log the request data
+        Log::info('Farm creation request:', [
+            'user_id' => $request->user()->id,
+            'data' => $validated,
         ]);
 
         $farm = $request->user()->farms()->create($validated);

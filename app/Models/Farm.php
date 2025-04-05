@@ -12,6 +12,7 @@ class Farm extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'coordinates',
     ];
 
     public function user()
