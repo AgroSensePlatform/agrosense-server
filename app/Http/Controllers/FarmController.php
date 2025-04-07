@@ -18,12 +18,6 @@ class FarmController extends Controller
 
     public function store(Request $request)
     {
-
-        Log::info('Farm creation request:', [
-            'user_id' => $request->user()->id,
-            'data' => $request->all(),
-        ]);
-
         $validated = $request->validate([
             'name' => 'required|string',
             'coordinates' => 'nullable|array',
@@ -34,11 +28,11 @@ class FarmController extends Controller
             $validated['coordinates'] = json_encode($validated['coordinates']);
         }
 
-            // Log the request data
-        Log::info('Farm creation request:', [
-            'user_id' => $request->user()->id,
-            'data' => $validated,
-        ]);
+        //     // Log the request data
+        // Log::info('Farm creation request:', [
+        //     'user_id' => $request->user()->id,
+        //     'data' => $validated,
+        // ]);
 
         $farm = $request->user()->farms()->create($validated);
 
