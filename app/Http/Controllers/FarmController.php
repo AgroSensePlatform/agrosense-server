@@ -69,4 +69,11 @@ class FarmController extends Controller
 
         return response()->json($farm);
     }
+
+
+    public function sensors(Farm $farm)
+    {
+        $this->authorize('view', $farm);
+        return response()->json($farm->sensors);
+    }
 }

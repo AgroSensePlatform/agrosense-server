@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/farms/{farm}', [FarmController::class, 'show']);
     Route::put('/farms/{farm}', [FarmController::class, 'update']);
     Route::delete('/farms/{farm}', [FarmController::class, 'destroy']);
+    Route::get('/farms/{farm}/sensors', [FarmController::class, 'sensors']);
 });
 
 
