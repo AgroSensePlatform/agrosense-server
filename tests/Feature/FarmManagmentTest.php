@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Farm;
+use App\Models\Sensor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -105,4 +106,52 @@ it('can update a farm created by the user', function () {
         'id' => $farm->id,
         'name' => 'Updated Farm Name',
     ]);
+});
+
+it('can retrieve sensors with their last measurement for a farm', function () {
+    // Create a user and authenticate
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    // Create a farm associated with the user
+    $farm = Farm::factory()->create(['user_id' => $user->id]);
+
+    // Create sensors for the farm
+    $sensors = Sensor::factory()->count(3)->create(['farm_id' => $farm->id]);
+
+    // Add measurements to the sensors
+    foreach ($sensors as $sensor) {
+        $sensor->measurements()->create([
+            'humidity' => rand(10, 90),
+            'timestamp' => now(),
+        ]);
+    }
+
+    // Send a GET request to the sensors endpoint
+    $response = $this->getJson("/api/farms/{$farm->id}/sensors");
+
+    //dd($response->json());
+    // Assert the response status and structure
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            '*' => [
+                'id',
+                'code',
+                'lat',
+                'lon',
+                'last_measurement',
+                'created_at',
+                'updated_at',
+            ],
+        ]);
+
+    // Additional check to ensure last_measurement can be null
+    $responseData = $response->json();
+    foreach ($responseData as $sensor) {
+        if ($sensor['last_measurement'] !== null) {
+            $this->assertArrayHasKey('humidity', $sensor['last_measurement']);
+        } else {
+            $this->assertNull($sensor['last_measurement']);
+        }
+    }
 });
