@@ -72,30 +72,31 @@ AgroSense is a backend application designed to support farmers in smart water ma
 ## API Endpoints
 
 ### Authentication
-- `POST /register` - Register a new user.
-- `POST /login` - Log in and receive an authentication token.
-- `POST /logout` - Log out the authenticated user.
-- `GET /user` - Get the authenticated user's details.
-- `PUT /user` - Update the authenticated user's profile (e.g., name, email, password).
-- `DELETE /user` - Delete the authenticated user's account.
+- `POST /api/register` - Register a new user.
+- `POST /api/login` - Log in and receive an authentication token.
+- `POST /api/logout` - Log out the authenticated user.
+- `GET /api/user` - Get the authenticated user's details.
+- `PUT /api/user` - Update the authenticated user's profile (e.g., name, email, password).
+- `DELETE /api/user` - Delete the authenticated user's account.
 
 ### Farms
-- `GET /farms` - List all farms for the authenticated user.
-- `POST /farms` - Create a new farm.
-- `GET /farms/{farm}` - View a specific farm.
-- `PUT /farms/{farm}` - Update a specific farm.
-- `DELETE /farms/{farm}` - Delete a specific farm.
+- `GET /api/farms` - List all farms for the authenticated user.
+- `POST /api/farms` - Create a new farm.
+- `GET /api/farms/{farm}` - View a specific farm.
+- `PUT /api/farms/{farm}` - Update a specific farm.
+- `DELETE /api/farms/{farm}` - Delete a specific farm.
+- `GET /api/farms/{farm}/sensors` - List all sensors for a specific farm.
 
 ### Sensors
-- `GET /sensors` - List all sensors for the authenticated user.
-- `POST /sensors` - Add a new sensor.
-- `POST /sensors/scan` - Create or update a sensor by scanning its QR code.
-- `GET /sensors/{sensor}` - View a specific sensor.
-- `PUT /sensors/{sensor}` - Update a specific sensor.
-- `DELETE /sensors/{sensor}` - Delete a specific sensor.
+- `GET /api/sensors` - List all sensors for the authenticated user.
+- `POST /api/sensors` - Add a new sensor.
+- `POST /api/sensors/scan` - Create or update a sensor by scanning its QR code.
+- `GET /api/sensors/{sensor}` - View a specific sensor with its measurements.
+- `PUT /api/sensors/{sensor}` - Update a specific sensor.
+- `DELETE /api/sensors/{sensor}` - Delete a specific sensor.
 
 ### Measurements
-- `POST /measurements` - Post a measurement from a sensor.
+- `POST /api/measurements` - Post a measurement from a sensor.
 
 ---
 
