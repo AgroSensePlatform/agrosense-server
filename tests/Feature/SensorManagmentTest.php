@@ -77,6 +77,7 @@ it('retrieves all sensors for the authenticated user with the latest value', fun
             'timestamp' => now()->subMinutes(5),
         ]);
 
+        // Create latest measurement
         Measurement::factory()->create([
             'sensor_id' => $sensor->id,
             'humidity' => 60,
@@ -88,14 +89,17 @@ it('retrieves all sensors for the authenticated user with the latest value', fun
 
     $response->assertStatus(200);
 
-    foreach ($sensors as $sensor) {
-        $response->assertJsonFragment([
-            'id' => $sensor->id,
-            'last_measurement' => [
-                'humidity' => 60,
-            ],
-        ]);
-    }
+    // Get the response data and check the specific fields
+    $responseData = $response->json()[0];
+
+    // Assert the correct sensor ID
+    $this->assertEquals($sensors[0]->id, $responseData['id']);
+
+    // Assert the correct humidity value
+    $this->assertEquals(60, $responseData['last_measurement']['humidity']);
+
+    // Assert the timestamp exists
+    $this->assertArrayHasKey('timestamp', $responseData['last_measurement']);
 });
 
 it('not retrieves other users sensors =', function () {

@@ -49,7 +49,7 @@ class Sensor extends Model
 
         return [
             'humidity' => $measurement->humidity,
-            // You can add more fields here if needed:
+            'timestamp' => $measurement->timestamp,
             // 'temperature' => $measurement->temperature,
             // 'soil_moisture' => $measurement->soil_moisture,
             // etc.
