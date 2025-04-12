@@ -48,6 +48,10 @@ class SensorController extends Controller
     {
         $this->authorize('view', $sensor);
 
+        $sensor->load(['measurements' => function ($query) {
+            $query->latest('timestamp')->limit(100);
+        }]);
+
         return response()->json($sensor);
     }
 

@@ -197,3 +197,31 @@ it('updates an existing sensor if the code from qrcode already exists', function
         'lon' => -122.4194,
     ]);
 });
+
+it('retrieves a sensor with its last 100 measurements', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $farm = Farm::factory()->create(['user_id' => $user->id]);
+
+    $sensor = Sensor::factory()->create(['user_id' => $user->id, 'farm_id' => $farm->id]);
+
+    // Add 150 measurements for the sensor
+    Measurement::factory()->count(150)->create([
+        'sensor_id' => $sensor->id,
+        'humidity' => 50,
+        'timestamp' => now()->subMinutes(150),
+    ]);
+
+    $response = $this->getJson("/api/sensors/{$sensor->id}");
+
+    $response->assertStatus(200);
+
+    $responseData = $response->json();
+    // Assert the sensor ID matches
+    $this->assertEquals($sensor->id, $responseData['id']);
+
+    // Assert there are exactly 100 measurements
+    $this->assertCount(100, $responseData['measurements']);
+
+});

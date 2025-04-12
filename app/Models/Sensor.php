@@ -29,6 +29,6 @@ class Sensor extends Model
 
     public function measurements()
     {
-        return $this->hasMany(Measurement::class);
+        return $this->hasMany(Measurement::class)->orderBy('timestamp', 'desc');
     }
 }
