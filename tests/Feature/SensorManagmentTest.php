@@ -2,6 +2,7 @@
 use App\Models\User;
 use App\Models\Farm;
 use App\Models\Sensor;
+use App\Models\Measurement;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -58,6 +59,43 @@ it('retrieves all sensors for the authenticated user', function () {
         ->assertJsonFragment(['id' => $sensors[0]->id])
         ->assertJsonFragment(['id' => $sensors[1]->id])
         ->assertJsonFragment(['id' => $sensors[2]->id]);
+});
+
+it('retrieves all sensors for the authenticated user with the latest value', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $farm = Farm::factory()->create(['user_id' => $user->id]);
+
+    $sensors = Sensor::factory()->count(1)->create(['user_id' => $user->id, 'farm_id' => $farm->id]);
+
+    // Add measurements for each sensor
+    foreach ($sensors as $sensor) {
+        Measurement::factory()->create([
+            'sensor_id' => $sensor->id,
+            'humidity' => 50,
+            'timestamp' => now()->subMinutes(5),
+        ]);
+
+        Measurement::factory()->create([
+            'sensor_id' => $sensor->id,
+            'humidity' => 60,
+            'timestamp' => now(),
+        ]);
+    }
+
+    $response = $this->getJson('/api/sensors');
+
+    $response->assertStatus(200);
+
+    foreach ($sensors as $sensor) {
+        $response->assertJsonFragment([
+            'id' => $sensor->id,
+            'last_measurement' => [
+                'humidity' => 60,
+            ],
+        ]);
+    }
 });
 
 it('not retrieves other users sensors =', function () {

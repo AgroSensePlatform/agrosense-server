@@ -9,7 +9,18 @@ class SensorController extends Controller
 {
     public function index(Request $request)
     {
-        $sensors = $request->user()->sensors;
+        $sensors = $request->user()->sensors()->with(['measurements' => function ($query) {
+            $query->latest('timestamp')->limit(1);
+        }])->get();
+
+        $sensors = $sensors->map(function ($sensor) {
+            $sensor->last_measurement = $sensor->measurements->first() ? [
+                'humidity' => $sensor->measurements->first()->humidity,
+            ] : null;
+            unset($sensor->measurements);
+            return $sensor;
+        });
+
         return response()->json($sensors);
     }
 
