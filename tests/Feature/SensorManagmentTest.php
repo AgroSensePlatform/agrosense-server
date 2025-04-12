@@ -43,7 +43,37 @@ it('can add a new sensor to a farm', function () {
     ]);
 });
 
+it('retrieves all sensors for the authenticated user', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
 
+    $farm = Farm::factory()->create(['user_id' => $user->id]);
+
+    $sensors = Sensor::factory()->count(3)->create(['user_id' => $user->id, 'farm_id' => $farm->id]);
+
+    $response = $this->getJson('/api/sensors');
+    //dd($response->json());
+    $response->assertStatus(200)
+        ->assertJsonCount(3)
+        ->assertJsonFragment(['id' => $sensors[0]->id])
+        ->assertJsonFragment(['id' => $sensors[1]->id])
+        ->assertJsonFragment(['id' => $sensors[2]->id]);
+});
+
+it('not retrieves other users sensors =', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $otherUser = User::factory()->create();
+    $farm = Farm::factory()->create(['user_id' => $otherUser->id]);
+
+    $sensors = Sensor::factory()->count(3)->create(['user_id' => $otherUser->id, 'farm_id' => $farm->id]);
+
+    $response = $this->getJson('/api/sensors');
+    //dd($response->json());
+    $response->assertStatus(200)
+        ->assertJsonCount(0);
+});
 
 it('allows a user to view their own sensor', function () {
     $user = User::factory()->create();
@@ -52,6 +82,8 @@ it('allows a user to view their own sensor', function () {
     $this->actingAs($user);
 
     $response = $this->getJson("/api/sensors/{$sensor->id}");
+    //assert there is farms in the json
+
 
     $response->assertStatus(200);
 });

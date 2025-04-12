@@ -48,4 +48,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Farm::class);
     }
+
+    public function sensors()
+    {
+        return $this->hasMany(Sensor::class);
+    }
+
+    public function measurements()
+    {
+        return $this->hasMany(Measurement::class);
+    }
 }
