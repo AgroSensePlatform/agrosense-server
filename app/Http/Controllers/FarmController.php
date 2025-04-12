@@ -75,29 +75,8 @@ class FarmController extends Controller
     {
         $this->authorize('view', $farm);
 
-        $sensors = $farm->sensors()->with(['measurements' => function($query) {
-            $query->latest('timestamp')->limit(1);
-        }])->get();
+        $sensors = $farm->sensors()->with('latestMeasurement')->get();
 
-        // Transform the result to include the last measurement directly
-        $sensorsWithMeasurements = $sensors->map(function($sensor) {
-            $lastMeasurement = $sensor->measurements->first();
-
-            return [
-                'id' => $sensor->id,
-                'code' => $sensor->code,
-                'lat' => $sensor->lat,
-                'lon' => $sensor->lon,
-                'last_measurement' => $lastMeasurement ? [
-                    'id' => $lastMeasurement->id,
-                    'humidity' => $lastMeasurement->humidity,
-                    'timestamp' => $lastMeasurement->timestamp,
-                ] : null,
-                'created_at' => $sensor->created_at,
-                'updated_at' => $sensor->updated_at,
-            ];
-        });
-
-        return response()->json($sensorsWithMeasurements);
+        return response()->json($sensors);
     }
 }

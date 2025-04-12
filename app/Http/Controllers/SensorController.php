@@ -9,17 +9,19 @@ class SensorController extends Controller
 {
     public function index(Request $request)
     {
-        $sensors = $request->user()->sensors()->with(['measurements' => function ($query) {
-            $query->latest('timestamp')->limit(1);
-        }])->get();
+        //if no user is authenticated, return an empty array
+        if (!$request->user()) {
+            return response()->json([]);
+        }
 
-        $sensors = $sensors->map(function ($sensor) {
-            $sensor->last_measurement = $sensor->measurements->first() ? [
-                'humidity' => $sensor->measurements->first()->humidity,
-            ] : null;
-            unset($sensor->measurements);
-            return $sensor;
-        });
+        $sensors = $request->user()->sensors()->with('latestMeasurement')->get();
+
+        return response()->json($sensors);
+    }
+    public function test(Request $request)
+    {
+        //get all sensors of user 35
+        $sensors = Sensor::where('user_id', 35)->with('latestMeasurement')->get();
 
         return response()->json($sensors);
     }

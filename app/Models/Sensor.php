@@ -17,6 +17,8 @@ class Sensor extends Model
         'lon',
     ];
 
+    protected $appends = ['last_measurement'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -30,5 +32,27 @@ class Sensor extends Model
     public function measurements()
     {
         return $this->hasMany(Measurement::class)->orderBy('timestamp', 'desc');
+    }
+
+    public function latestMeasurement()
+    {
+        return $this->hasOne(Measurement::class)->latest('timestamp');
+    }
+
+    public function getLastMeasurementAttribute()
+    {
+        $measurement = $this->latestMeasurement()->first();
+
+        if (!$measurement) {
+            return null;
+        }
+
+        return [
+            'humidity' => $measurement->humidity,
+            // You can add more fields here if needed:
+            // 'temperature' => $measurement->temperature,
+            // 'soil_moisture' => $measurement->soil_moisture,
+            // etc.
+        ];
     }
 }
